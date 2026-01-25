@@ -9,6 +9,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.16.15"
+    "astro": "^5.16.15",
+    "d3-array": "^3.2.4"
+  },
+  "devDependencies": {
+    "@types/d3-array": "^3.2.2"
   }
 }

@@ -1,17 +1,1106 @@
 ---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+import { groups, descending } from "d3-array";
+import ProgramCollected from "../components/ProgramCollected.astro";
 
+const images = import.meta.glob<{ default: ImageMetadata }>("/src/assets/*");
+
+const quarters: Array<Quarter> = [
+  {
+    name: "Standing Liberty",
+    image: "standing-liberty-1916-1930.jpg",
+    year: [1916, 1930],
+  },
+  {
+    name: "George Washington",
+    image: "george-washington-1932-1998.jpg",
+    year: [1932, 1998],
+  },
+  {
+    name: "Bicentennial",
+    image: "bicentennial-1975-1976.jpg",
+    year: [1975, 1976],
+    collected: true,
+  },
+  {
+    name: "Delaware",
+    image: "delaware-1999.jpg",
+    program: "50 State Quarters",
+    year: 1999,
+  },
+  {
+    name: "Pennsylvania",
+    image: "pennsylvania-1999.jpg",
+    program: "50 State Quarters",
+    year: 1999,
+  },
+  {
+    name: "New Jersey",
+    image: "new-jersey-1999.jpg",
+    program: "50 State Quarters",
+    year: 1999,
+    collected: true,
+  },
+  {
+    name: "Georgia",
+    image: "georgia-1999.jpg",
+    program: "50 State Quarters",
+    year: 1999,
+    collected: true,
+  },
+  {
+    name: "Connecticut",
+    image: "connecticut-1999.jpg",
+    program: "50 State Quarters",
+    year: 1999,
+  },
+  {
+    name: "Massachusetts",
+    image: "massachusetts-2000.jpg",
+    program: "50 State Quarters",
+    year: 2000,
+  },
+  {
+    name: "Maryland",
+    image: "maryland-2000.jpg",
+    program: "50 State Quarters",
+    year: 2000,
+  },
+  {
+    name: "South Carolina",
+    image: "south-carolina-2000.jpg",
+    program: "50 State Quarters",
+    year: 2000,
+    collected: true,
+  },
+  {
+    name: "New Hampshire",
+    image: "new-hampshire-2000.jpg",
+    program: "50 State Quarters",
+    year: 2000,
+  },
+  {
+    name: "Virginia",
+    image: "virginia-2000.jpg",
+    program: "50 State Quarters",
+    year: 2000,
+  },
+  {
+    name: "New York",
+    image: "new-york-2001.jpg",
+    program: "50 State Quarters",
+    year: 2001,
+    collected: true,
+  },
+  {
+    name: "North Carolina",
+    image: "north-carolina-2001.jpg",
+    program: "50 State Quarters",
+    year: 2001,
+    collected: true,
+  },
+  {
+    name: "Rhode Island",
+    image: "rhode-island-2001.jpg",
+    program: "50 State Quarters",
+    year: 2001,
+  },
+  {
+    name: "Vermont",
+    image: "vermont-2001.jpg",
+    program: "50 State Quarters",
+    year: 2001,
+    collected: true,
+  },
+  {
+    name: "Kentucky",
+    image: "kentucky-2001.jpg",
+    program: "50 State Quarters",
+    year: 2001,
+    collected: true,
+  },
+  {
+    name: "Tennessee",
+    image: "tennessee-2002.jpg",
+    program: "50 State Quarters",
+    year: 2002,
+  },
+  {
+    name: "Ohio",
+    image: "ohio-2002.jpg",
+    program: "50 State Quarters",
+    year: 2002,
+  },
+  {
+    name: "Louisiana",
+    image: "louisiana-2002.jpg",
+    program: "50 State Quarters",
+    year: 2002,
+  },
+  {
+    name: "Indiana",
+    image: "indiana-2002.jpg",
+    program: "50 State Quarters",
+    year: 2002,
+    collected: true,
+  },
+  {
+    name: "Mississippi",
+    image: "mississippi-2002.jpg",
+    program: "50 State Quarters",
+    year: 2002,
+    collected: true,
+  },
+  {
+    name: "Illinois",
+    image: "illinois-2003.jpg",
+    program: "50 State Quarters",
+    year: 2003,
+  },
+  {
+    name: "Alabama",
+    image: "alabama-2003.jpg",
+    program: "50 State Quarters",
+    year: 2003,
+  },
+  {
+    name: "Maine",
+    image: "maine-2003.jpg",
+    program: "50 State Quarters",
+    year: 2003,
+    collected: true,
+  },
+  {
+    name: "Missouri",
+    image: "missouri-2003.jpg",
+    program: "50 State Quarters",
+    year: 2003,
+  },
+  {
+    name: "Arkansas",
+    image: "arkansas-2003.jpg",
+    program: "50 State Quarters",
+    year: 2003,
+    collected: true,
+  },
+  {
+    name: "Michigan",
+    image: "michigan-2004.jpg",
+    program: "50 State Quarters",
+    year: 2004,
+    collected: true,
+  },
+  {
+    name: "Florida",
+    image: "florida-2004.jpg",
+    program: "50 State Quarters",
+    year: 2004,
+  },
+  {
+    name: "Texas",
+    image: "texas-2004.jpg",
+    program: "50 State Quarters",
+    year: 2004,
+  },
+  {
+    name: "Iowa",
+    image: "iowa-2004.jpg",
+    program: "50 State Quarters",
+    year: 2004,
+  },
+  {
+    name: "Wisconsin",
+    image: "wisconsin-2004.jpg",
+    program: "50 State Quarters",
+    year: 2004,
+  },
+  {
+    name: "California",
+    image: "california-2005.jpg",
+    program: "50 State Quarters",
+    year: 2005,
+    collected: true,
+  },
+  {
+    name: "Minnesota",
+    image: "minnesota-2005.jpg",
+    program: "50 State Quarters",
+    year: 2005,
+  },
+  {
+    name: "Oregon",
+    image: "oregon-2005.jpg",
+    program: "50 State Quarters",
+    year: 2005,
+    collected: true,
+  },
+  {
+    name: "Kansas",
+    image: "kansas-2005.jpg",
+    program: "50 State Quarters",
+    year: 2005,
+  },
+  {
+    name: "West Virginia",
+    image: "west-virginia-2005.jpg",
+    program: "50 State Quarters",
+    year: 2005,
+  },
+  {
+    name: "Nevada",
+    image: "nevada-2006.jpg",
+    program: "50 State Quarters",
+    year: 2006,
+  },
+  {
+    name: "Nebraska",
+    image: "nebraska-2006.jpg",
+    program: "50 State Quarters",
+    year: 2006,
+    collected: true,
+  },
+  {
+    name: "Colorado",
+    image: "colorado-2006.jpg",
+    program: "50 State Quarters",
+    year: 2006,
+  },
+  {
+    name: "North Dakota",
+    image: "north-dakota-2006.jpg",
+    program: "50 State Quarters",
+    year: 2006,
+    collected: true,
+  },
+  {
+    name: "South Dakota",
+    image: "south-dakota-2006.jpg",
+    program: "50 State Quarters",
+    year: 2006,
+  },
+  {
+    name: "Montana",
+    image: "montana-2007.jpg",
+    program: "50 State Quarters",
+    year: 2007,
+    collected: true,
+  },
+  {
+    name: "Washington",
+    image: "washington-2007.jpg",
+    program: "50 State Quarters",
+    year: 2007,
+  },
+  {
+    name: "Idaho",
+    image: "idaho-2007.jpg",
+    program: "50 State Quarters",
+    year: 2007,
+  },
+  {
+    name: "Wyoming",
+    image: "wyoming-2007.jpg",
+    program: "50 State Quarters",
+    year: 2007,
+  },
+  {
+    name: "Utah",
+    image: "utah-2007.jpg",
+    program: "50 State Quarters",
+    year: 2007,
+  },
+  {
+    name: "Oklahoma",
+    image: "oklahoma-2008.jpg",
+    program: "50 State Quarters",
+    year: 2008,
+  },
+  {
+    name: "New Mexico",
+    image: "new-mexico-2008.jpg",
+    program: "50 State Quarters",
+    year: 2008,
+  },
+  {
+    name: "Arizona",
+    image: "arizona-2008.jpg",
+    program: "50 State Quarters",
+    year: 2008,
+    collected: true,
+  },
+  {
+    name: "Alaska",
+    image: "alaska-2008.jpg",
+    program: "50 State Quarters",
+    year: 2008,
+  },
+  {
+    name: "Hawaii",
+    image: "hawaii-2008.jpg",
+    program: "50 State Quarters",
+    year: 2008,
+  },
+  {
+    name: "District of Columbia",
+    image: "district-of-columbia-2009.jpg",
+    program: "District of Columbia and United States Territories Quarters",
+    year: 2009,
+  },
+  {
+    name: "Puerto Rico",
+    image: "puerto-rico-2009.jpg",
+    program: "District of Columbia and United States Territories Quarters",
+    year: 2009,
+  },
+  {
+    name: "Guam",
+    image: "guam-2009.jpg",
+    program: "District of Columbia and United States Territories Quarters",
+    year: 2009,
+  },
+  {
+    name: "American Samoa",
+    image: "american-samoa-2009.jpg",
+    program: "District of Columbia and United States Territories Quarters",
+    year: 2009,
+  },
+  {
+    name: "U.S. Virgin Islands",
+    image: "us-virgin-islands-2009.jpg",
+    program: "District of Columbia and United States Territories Quarters",
+    year: 2009,
+  },
+  {
+    name: "Northern Mariana Islands",
+    image: "northern-mariana-islands-2009.jpg",
+    program: "District of Columbia and United States Territories Quarters",
+    year: 2009,
+  },
+  {
+    name: "Hot Springs",
+    image: "hot-springs-2010.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2010,
+  },
+  {
+    name: "Yellowstone",
+    image: "yellowstone-2010.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2010,
+  },
+  {
+    name: "Yosemite",
+    image: "yosemite-2010.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2010,
+  },
+  {
+    name: "Grand Canyon",
+    image: "grand-canyon-2010.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2010,
+  },
+  {
+    name: "Mount Hood",
+    image: "mount-hood-2010.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2010,
+  },
+  {
+    name: "Gettysburg",
+    image: "gettysburg-2011.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2011,
+  },
+  {
+    name: "Glacier",
+    image: "glacier-2011.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2011,
+  },
+  {
+    name: "Olympic",
+    image: "olympic-2011.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2011,
+  },
+  {
+    name: "Vicksburg",
+    image: "vicksburg-2011.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2011,
+    collected: true,
+  },
+  {
+    name: "Chickasaw",
+    image: "chickasaw-2011.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2011,
+  },
+  {
+    name: "El Yunque",
+    image: "el-yunque-2012.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2012,
+  },
+  {
+    name: "Chaco Culture",
+    image: "chaco-culture-2012.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2012,
+  },
+  {
+    name: "Acadia",
+    image: "acadia-2012.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2012,
+  },
+  {
+    name: "Hawai’i Volcanoes",
+    image: "hawaii-volcanoes-2012.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2012,
+  },
+  {
+    name: "Denali",
+    image: "denali-2012.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2012,
+    collected: true,
+  },
+  {
+    name: "White Mountain",
+    image: "white-mountain-2013.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2013,
+    collected: true,
+  },
+  {
+    name: "Perry’s Victory",
+    image: "perrys-victory-2013.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2013,
+  },
+  {
+    name: "Great Basin",
+    image: "great-basin-2013.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2013,
+  },
+  {
+    name: "Fort McHenry",
+    image: "fort-mchenry-2013.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2013,
+  },
+  {
+    name: "Mount Rushmore",
+    image: "mount-rushmore-2013.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2013,
+    collected: true,
+  },
+  {
+    name: "Great Smoky Mountains",
+    image: "great-smoky-mountains-2014.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2014,
+    collected: true,
+  },
+  {
+    name: "Shenandoah",
+    image: "shenandoah-2014.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2014,
+  },
+  {
+    name: "Arches",
+    image: "arches-2014.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2014,
+    collected: true,
+  },
+  {
+    name: "Great Sand Dunes",
+    image: "great-sand-dunes-2014.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2014,
+  },
+  {
+    name: "Everglades",
+    image: "everglades-2014.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2014,
+  },
+  {
+    name: "Homestead",
+    image: "homestead-2015.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2015,
+  },
+  {
+    name: "Kisatchie",
+    image: "kisatchie-2015.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2015,
+  },
+  {
+    name: "Blue Ridge Parkway",
+    image: "blue-ridge-parkway-2015.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2015,
+    collected: true,
+  },
+  {
+    name: "Bombay Hook",
+    image: "bombay-hook-2015.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2015,
+  },
+  {
+    name: "Saratoga",
+    image: "saratoga-2015.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2015,
+  },
+  {
+    name: "Shawnee",
+    image: "shawnee-2016.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2016,
+  },
+  {
+    name: "Cumberland Gap",
+    image: "cumberland-gap-2016.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2016,
+  },
+  {
+    name: "Harpers Ferry",
+    image: "harpers-ferry-2016.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2016,
+    collected: true,
+  },
+  {
+    name: "Theodore Roosevelt",
+    image: "theodore-roosevelt-2016.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2016,
+    collected: true,
+  },
+  {
+    name: "Fort Moultrie (Fort Sumter)",
+    image: "fort-moultrie-fort-sumter-2016.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2016,
+    collected: true,
+  },
+  {
+    name: "Effigy Mounds",
+    image: "effigy-mounds-2017.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2017,
+  },
+  {
+    name: "Frederick Douglass",
+    image: "frederick-douglass-2017.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2017,
+  },
+  {
+    name: "Ozark Riverwarys",
+    image: "ozark-riverwarys-2017.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2017,
+  },
+  {
+    name: "Ellis Island",
+    image: "ellis-island-2017.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2017,
+    collected: true,
+  },
+  {
+    name: "George Rogers Clark",
+    image: "george-rogers-clark-2017.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2017,
+  },
+  {
+    name: "Pictured Rocks",
+    image: "pictured-rocks-2018.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2018,
+  },
+  {
+    name: "Apostle Islands",
+    image: "apostle-islands-2018.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2018,
+  },
+  {
+    name: "Voyageurs",
+    image: "voyageurs-2018.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2018,
+  },
+  {
+    name: "Cumberland Island",
+    image: "cumberland-island-2018.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2018,
+  },
+  {
+    name: "Block Island",
+    image: "block-island-2018.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2018,
+    collected: true,
+  },
+  {
+    name: "Lowell",
+    image: "lowell-2019.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2019,
+  },
+  {
+    name: "American Memorial",
+    image: "american-memorial-2019.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2019,
+    collected: true,
+  },
+  {
+    name: "War in the Pacific",
+    image: "war-in-the-pacific-2019.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2019,
+  },
+  {
+    name: "San Antonio Missions",
+    image: "san-antonio-missions-2019.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2019,
+  },
+  {
+    name: "Frank Church",
+    image: "frank-church-2019.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2019,
+    collected: true,
+  },
+  {
+    name: "American Samoa",
+    image: "american-samoa-2020.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2020,
+  },
+  {
+    name: "Weir Farm",
+    image: "weir-farm-2020.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2020,
+  },
+  {
+    name: "Salt River Bay",
+    image: "salt-river-bay-2020.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2020,
+    collected: true,
+  },
+  {
+    name: "Marsh-Billings-Rockefeller",
+    image: "marsh-billings-rockefeller-2020.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2020,
+    collected: true,
+  },
+  {
+    name: "Tallgrass Prairie",
+    image: "tallgrass-prairie-2020.jpg",
+    program: "America the Beautiful Quarters",
+    year: 2020,
+    collected: true,
+  },
+  {
+    name: "Tuskegee Airmen",
+    image: "tuskegee-airmen-2021.jpeg",
+    program: "America the Beautiful Quarters",
+    year: 2021,
+    collected: true,
+  },
+  {
+    name: "General George Washington Crossing the Delaware",
+    year: 2021,
+    image: "general-george-washington-crossing-the-delaware-2021.jpeg",
+    collected: true,
+  },
+  {
+    name: "Maya Angelou",
+    image: "maya-angelou-2022.jpeg",
+    program: "American Women Quarters",
+    year: 2022,
+  },
+  {
+    name: "Dr. Sally Ride",
+    image: "dr-sally-ride-2022.png",
+    program: "American Women Quarters",
+    year: 2022,
+    collected: true,
+  },
+  {
+    name: "Wilma Mankiller",
+    image: "wilma-mankiller-2022.png",
+    program: "American Women Quarters",
+    year: 2022,
+    collected: true,
+  },
+  {
+    name: "Nina Otero-Warren",
+    image: "nina-otero-warren-2022.png",
+    program: "American Women Quarters",
+    year: 2022,
+  },
+  {
+    name: "Anna May Wong",
+    image: "anna-may-wong-2022.jpg",
+    program: "American Women Quarters",
+    year: 2022,
+  },
+  {
+    name: "Bessie Coleman",
+    image: "bessie-coleman-2023.jpg",
+    program: "American Women Quarters",
+    year: 2023,
+  },
+  {
+    name: "Edith Kanakaʻole",
+    image: "edith-kanakaole-2023.jpg",
+    program: "American Women Quarters",
+    year: 2023,
+    collected: true,
+  },
+  {
+    name: "Eleanor Roosevelt",
+    image: "eleanor-roosevelt-2023.jpg",
+    program: "American Women Quarters",
+    year: 2023,
+  },
+  {
+    name: "Jovita Idar",
+    image: "jovita-idar-2023.jpg",
+    program: "American Women Quarters",
+    year: 2023,
+    collected: true,
+  },
+  {
+    name: "Maria Tallchief",
+    image: "maria-tallchief-2023.jpg",
+    program: "American Women Quarters",
+    year: 2023,
+    collected: true,
+  },
+  {
+    name: "Dr. Pauli Murray",
+    image: "dr-pauli-murray-2024.jpg",
+    program: "American Women Quarters",
+    year: 2024,
+    collected: true,
+  },
+  {
+    name: "Patsy Mink",
+    image: "patsy-mink-2024.jpg",
+    program: "American Women Quarters",
+    year: 2024,
+  },
+  {
+    name: "Dr. Mary Edwards Walker",
+    image: "dr-mary-edwards-walker-2024.jpg",
+    program: "American Women Quarters",
+    year: 2024,
+    collected: true,
+  },
+  {
+    name: "Celia Cruz",
+    image: "celia-cruz-2024.jpg",
+    program: "American Women Quarters",
+    year: 2024,
+    collected: true,
+  },
+  {
+    name: "Zitkala-Ša",
+    image: "zitkala-ša-2024.jpg",
+    program: "American Women Quarters",
+    year: 2024,
+  },
+  {
+    name: "Ida B. Wells",
+    image: "ida-b-wells-2025.png",
+    program: "American Women Quarters",
+    year: 2025,
+  },
+  {
+    name: "Juliette Gordon Low",
+    image: "juliette-gordon-low-2025.png",
+    program: "American Women Quarters",
+    year: 2025,
+    collected: true,
+  },
+  {
+    name: "Dr. Vera Rubin",
+    image: "dr-vera-rubin-2025.jpg",
+    program: "American Women Quarters",
+    year: 2025,
+  },
+  {
+    name: "Stacey Milbern",
+    image: "stacey-milbern-2025.png",
+    program: "American Women Quarters",
+    year: 2025,
+  },
+  {
+    name: "Althea Gibson",
+    image: "althea-gibson-2025.png",
+    program: "American Women Quarters",
+    year: 2025,
+  },
+  {
+    name: "Mayflower Compact",
+    image: "mayflower-compact-2026.jpg",
+    program: "Semiquincentennial Quarters",
+    year: 2026,
+  },
+  {
+    name: "Revolutionary War",
+    image: "revolutionary-war-2026.jpg",
+    program: "Semiquincentennial Quarters",
+    year: 2026,
+  },
+  {
+    name: "Declaration of Independence",
+    image: "declaration-of-independence-2026.jpg",
+    program: "Semiquincentennial Quarters",
+    year: 2026,
+  },
+  {
+    name: "U.S. Constitution",
+    image: "us-constitution-2026.jpg",
+    program: "Semiquincentennial Quarters",
+    year: 2026,
+  },
+  {
+    name: "Gettysburg Address",
+    image: "gettysburg-address-2026.jpg",
+    program: "Semiquincentennial Quarters",
+    year: 2026,
+  },
+];
+const groupedQuarters = groups(
+  quarters.sort((a, b) => {
+    const aYear = Array.isArray(a.year) ? a.year.at(1) : a.year;
+    const bYear = Array.isArray(b.year) ? b.year.at(1) : b.year;
+    return descending(aYear, bYear);
+  }),
+  (d, i) => {
+    if (d.program === undefined) {
+      return i;
+    }
+
+    return d.program;
+  },
+  (d) => {
+    return Array.isArray(d.year) ? undefined : d.year;
+  },
+);
+
+const collectedQuarters = quarters.filter((d) => d.collected);
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Quarters</title>
+  </head>
+  <body>
+    <main>
+      <hgroup>
+        <h1>Quarters</h1>
+        <div>
+          <p>
+            <a href="https://erxclau.me">My</a> collection of circulating quarters.
+          </p>
+          <p>Images and data from the United States Mint and Wikipedia</p>
+          <p style="margin-top: 0.5rem">
+            Collected {collectedQuarters.length} of {quarters.length} quarters ({
+              Math.round((collectedQuarters.length / quarters.length) * 100)
+            }%).
+          </p>
+        </div>
+      </hgroup>
+      {
+        groupedQuarters.map(([groupName, groupQuarters]) => {
+          if (Number.isInteger(groupName)) {
+            return (
+              <section>
+                <div class="flex flex-wrap gap-1">
+                  {groupQuarters.map(([_yearGroup, yearQuarters]) => {
+                    return yearQuarters.map((quarter) => {
+                      return (
+                        <div>
+                          <Image
+                            src={images[`/src/assets/${quarter.image}`]()}
+                            alt={quarter.name}
+                            title={quarter.name}
+                            width={200}
+                            loading="lazy"
+                            decoding="async"
+                            fit="cover"
+                            data-collected={quarter.collected}
+                          />
+                        </div>
+                      );
+                    });
+                  })}
+                </div>
+              </section>
+            );
+          }
+
+          return (
+            <section>
+              <header>
+                <h2>{groupName}</h2>
+                <ProgramCollected
+                  quarters={groupQuarters.flatMap(
+                    ([_yearGroup, yearQuarters]) => yearQuarters,
+                  )}
+                />
+              </header>
+              <div class="flex flex-col gap-2">
+                {groupQuarters.map(([_yearGroup, yearQuarters]) => {
+                  return (
+                    <div class="flex flex-wrap gap-1">
+                      {yearQuarters.map((quarter) => {
+                        return (
+                          <div>
+                            <Image
+                              src={images[`/src/assets/${quarter.image}`]()}
+                              alt={quarter.name}
+                              title={quarter.name}
+                              width={200}
+                              loading="lazy"
+                              decoding="async"
+                              fit="cover"
+                              data-collected={quarter.collected}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })
+      }
+    </main>
+  </body>
 </html>
+
+<style>
+  html,
+  body {
+    font-family: Baskerville, serif;
+  }
+
+  main {
+    max-width: 625px;
+    margin: auto;
+    padding: 0.5rem 0.75rem;
+
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  hgroup {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  h1,
+  h2 {
+    font-weight: normal;
+  }
+
+  h1,
+  h2,
+  p {
+    margin: 0;
+  }
+
+  main section header {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 0.125rem;
+    column-gap: 0.25rem;
+    align-items: center;
+  }
+
+  main section header h2 {
+    font-family: Baskerville, serif;
+    font-size: 1.125rem;
+  }
+
+  main section {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .flex-col {
+    flex-direction: column;
+  }
+
+  .gap-1 {
+    gap: 0.25rem;
+  }
+
+  .gap-2 {
+    gap: 0.5rem;
+  }
+
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+
+  img {
+    width: 100px;
+    height: 100px;
+		object-fit: cover;
+    aspect-ratio: 1 / 1;
+    opacity: 0.25;
+  }
+
+  @media screen and (max-width: 625px) {
+    img {
+      width: 75px;
+      height: 75px;
+    }
+  }
+
+  img[data-collected="true"] {
+    opacity: 1;
+  }
+
+  a {
+    color: black;
+  }
+</style>

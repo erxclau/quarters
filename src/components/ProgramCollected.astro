@@ -1,0 +1,18 @@
+---
+interface Props {
+  quarters: Array<Quarter>;
+}
+
+const { quarters } = Astro.props;
+---
+
+<div>
+  ({quarters.filter((d) => d.collected).length} of {quarters.length})
+</div>
+
+<style>
+	div {
+		color: gray;
+		font-size: 0.875rem;
+	}
+</style>

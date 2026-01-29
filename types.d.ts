@@ -4,5 +4,5 @@ interface Quarter {
   year: [number, number] | number;
   program?: string;
   collected?: boolean;
-  collectedDate?: Date;
+  collectedDate?: import("@/temporal").TemporalDate;
 }

@@ -1,0 +1,102 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+  quarter: Quarter;
+  image: Promise<{
+    default: ImageMetadata;
+  }>;
+}
+
+const { quarter, image } = Astro.props;
+---
+
+<li>
+  <Image
+    src={image}
+    alt={quarter.name}
+    width={200}
+    loading="lazy"
+    decoding="async"
+    fit="cover"
+    data-collected={quarter.collected}
+  />
+
+  <div class="tooltip">
+    <p>
+      {quarter.name}
+      <span
+        >({
+          Array.isArray(quarter.year)
+            ? `${quarter.year[0]} to ${quarter.year[1]}`
+            : quarter.year
+        })</span
+      >
+    </p>
+    {
+      quarter.collected && quarter.collectedDate !== undefined ? (
+        <small>Collected on {quarter.collectedDate}</small>
+      ) : null
+    }
+  </div>
+</li>
+
+<style>
+  img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    opacity: 0.25;
+  }
+
+  @media screen and (max-width: 625px) {
+    img {
+      width: 69.125px;
+      height: 69.125px;
+    }
+  }
+
+  img[data-collected="true"] {
+    opacity: 1;
+  }
+
+  li {
+    anchor-scope: --quarter;
+  }
+
+  img {
+    anchor-name: --quarter;
+  }
+
+  .tooltip {
+    position: absolute;
+    position-anchor: --quarter;
+    position-area: top;
+    display: none;
+    background-color: white;
+    padding: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .tooltip p {
+    margin: 0;
+		font-size: 1rem;
+		font-weight: 600;
+  }
+
+  .tooltip p span {
+		font-weight: 400;
+  }
+
+  .tooltip small {
+    font-style: italic;
+  }
+
+  @supports (position-anchor: --quarter) and (anchor-scope: --quarter) and
+    (anchor-name: --quarter) and (position-area: top) {
+    img:hover + .tooltip {
+      display: block;
+    }
+  }
+</style>

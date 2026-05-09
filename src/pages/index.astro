@@ -6,6 +6,7 @@ import { groups, descending } from "d3-array";
 
 import ProgramCollected from "@/components/ProgramCollected.astro";
 import { TemporalDate } from "@/temporal";
+import Quarter from "@/components/Quarter.astro";
 
 const images = import.meta.glob<{ default: ImageMetadata }>("/src/assets/*");
 
@@ -341,7 +342,7 @@ const quarters: Array<Quarter> = [
     program: "50 State Quarters",
     year: 2008,
     collected: true,
-    collectedDate: new TemporalDate(2026, 4, 17)
+    collectedDate: new TemporalDate(2026, 4, 17),
   },
   {
     name: "New Mexico",
@@ -349,7 +350,7 @@ const quarters: Array<Quarter> = [
     program: "50 State Quarters",
     year: 2008,
     collected: true,
-    collectedDate: new TemporalDate(2026, 4, 30)
+    collectedDate: new TemporalDate(2026, 4, 30),
   },
   {
     name: "Arizona",
@@ -586,7 +587,7 @@ const quarters: Array<Quarter> = [
     program: "America the Beautiful Quarters",
     year: 2015,
     collected: true,
-    collectedDate: new TemporalDate(2026, 5, 4)
+    collectedDate: new TemporalDate(2026, 5, 4),
   },
   {
     name: "Blue Ridge Parkway",
@@ -757,7 +758,7 @@ const quarters: Array<Quarter> = [
     program: "America the Beautiful Quarters",
     year: 2020,
     collected: true,
-    collectedDate: new TemporalDate(2026, 5, 5)
+    collectedDate: new TemporalDate(2026, 5, 5),
   },
   {
     name: "Weir Farm",
@@ -1006,7 +1007,7 @@ const collectedQuarters = quarters.filter((d) => d.collected);
           <p>
             <a href="https://erxclau.me">My</a> collection of circulating quarters.
           </p>
-          <p>Images and data from the United States Mint and Wikipedia</p>
+          <p>Images and data from the United States Mint and Wikipedia.</p>
           <p style="margin-top: 0.5rem">
             Collected {collectedQuarters.length} of {quarters.length} quarters ({
               Math.round((collectedQuarters.length / quarters.length) * 100)
@@ -1022,26 +1023,18 @@ const collectedQuarters = quarters.filter((d) => d.collected);
                 <header>
                   <h2>{quarters[+groupName].name}</h2>
                 </header>
-                <div class="flex flex-wrap gap-1">
+                <ul class="flex flex-wrap gap-1">
                   {groupQuarters.map(([_yearGroup, yearQuarters]) => {
                     return yearQuarters.map((quarter) => {
                       return (
-                        <div>
-                          <Image
-                            src={images[`/src/assets/${quarter.image}`]()}
-                            alt={quarter.name}
-                            title={quarter.name}
-                            width={200}
-                            loading="lazy"
-                            decoding="async"
-                            fit="cover"
-                            data-collected={quarter.collected}
-                          />
-                        </div>
+                        <Quarter
+                          quarter={quarter}
+                          image={images[`/src/assets/${quarter.image}`]()}
+                        />
                       );
                     });
                   })}
-                </div>
+                </ul>
               </section>
             );
           }
@@ -1059,24 +1052,16 @@ const collectedQuarters = quarters.filter((d) => d.collected);
               <div class="flex flex-col gap-2">
                 {groupQuarters.map(([_yearGroup, yearQuarters]) => {
                   return (
-                    <div class="flex flex-wrap gap-1">
+                    <ul class="flex flex-wrap gap-1">
                       {yearQuarters.map((quarter) => {
                         return (
-                          <div>
-                            <Image
-                              src={images[`/src/assets/${quarter.image}`]()}
-                              alt={quarter.name}
-                              title={quarter.name}
-                              width={200}
-                              loading="lazy"
-                              decoding="async"
-                              fit="cover"
-                              data-collected={quarter.collected}
-                            />
-                          </div>
+                          <Quarter
+                            quarter={quarter}
+                            image={images[`/src/assets/${quarter.image}`]()}
+                          />
                         );
                       })}
-                    </div>
+                    </ul>
                   );
                 })}
               </div>
@@ -1095,7 +1080,7 @@ const collectedQuarters = quarters.filter((d) => d.collected);
   }
 
   main {
-    max-width: 625px;
+    max-width: calc(500px + (4 * 0.25rem));
     margin: auto;
     padding: 0.5rem 0.75rem;
 
@@ -1157,26 +1142,13 @@ const collectedQuarters = quarters.filter((d) => d.collected);
     flex-wrap: wrap;
   }
 
-  img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    aspect-ratio: 1 / 1;
-    opacity: 0.25;
-  }
-
-  @media screen and (max-width: 625px) {
-    img {
-      width: 69.125px;
-      height: 69.125px;
-    }
-  }
-
-  img[data-collected="true"] {
-    opacity: 1;
-  }
-
   a {
     color: black;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 </style>

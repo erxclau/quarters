@@ -1,6 +1,5 @@
 ---
 import type { ImageMetadata } from "astro";
-import { Image } from "astro:assets";
 
 import { groups, descending } from "d3-array";
 
@@ -39,6 +38,8 @@ const quarters: Array<Quarter> = [
     image: "pennsylvania-1999.jpg",
     program: "50 State Quarters",
     year: 1999,
+    collected: true,
+    collectedDate: new TemporalDate(2026, 5, 17),
   },
   {
     name: "New Jersey",
@@ -302,6 +303,8 @@ const quarters: Array<Quarter> = [
     image: "south-dakota-2006.jpg",
     program: "50 State Quarters",
     year: 2006,
+    collected: true,
+    collectedDate: new TemporalDate(2026, 5, 17),
   },
   {
     name: "Montana",
